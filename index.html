@@ -1,0 +1,235 @@
+
+<meta charset="UTF-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding:1.5rem 0}
+.section-label{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px}
+.phone{background:#1C1C1E;border-radius:32px;padding:16px 10px 20px;width:100%;max-width:280px;margin:0 auto}
+.phone-bar{display:flex;align-items:center;gap:8px;padding:0 8px 10px;border-bottom:0.5px solid rgba(255,255,255,0.08)}
+.phone-avatar{width:28px;height:28px;border-radius:50%;background:#5865F2;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff}
+.phone-name{font-size:13px;font-weight:500;color:#fff}
+.phone-sub{font-size:10px;color:rgba(255,255,255,0.45)}
+.chat{padding:10px 6px;display:flex;flex-direction:column;gap:8px;min-height:260px}
+.bubble{max-width:88%;padding:8px 11px;border-radius:16px;font-size:13px;line-height:1.5;word-break:break-word}
+.bot-bubble{background:#2C2C2E;color:#E5E5EA;align-self:flex-start;border-bottom-left-radius:4px}
+.user-bubble{background:#0A84FF;color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.inline-kb{display:flex;flex-direction:column;gap:4px;margin-top:6px}
+.kb-btn{background:rgba(10,132,255,0.15);border:0.5px solid rgba(10,132,255,0.35);color:#0A84FF;border-radius:10px;padding:7px 12px;font-size:12px;text-align:center}
+.kb-btn.success{background:rgba(52,199,89,0.15);border-color:rgba(52,199,89,0.35);color:#34C759}
+.kb-btn.link{background:rgba(255,159,10,0.1);border-color:rgba(255,159,10,0.35);color:#FF9F0A}
+.dots{text-align:center;padding:8px 0 0}
+.step-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.25);display:inline-block;margin:0 2px}
+.step-dot.active{background:#0A84FF}
+.ctrl-btn{font-size:12px;padding:6px 16px;color:var(--color-text-secondary);background:none;border:0.5px solid var(--color-border-secondary);border-radius:20px;cursor:pointer;margin:4px}
+.panel{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.badge{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:3px 8px;border-radius:20px}
+.badge.python{background:#EAF3DE;color:#3B6D11}
+.badge.aiogram{background:#E6F1FB;color:#185FA5}
+.tabs{display:flex;gap:2px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:3px;margin-bottom:16px}
+.tab{flex:1;text-align:center;padding:6px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;color:var(--color-text-secondary)}
+.tab.active{background:var(--color-background-primary);color:var(--color-text-primary);border:0.5px solid var(--color-border-tertiary)}
+.pane{display:none}.pane.active{display:block}
+.flow-step{display:flex;gap:12px;padding:10px 0;position:relative}
+.flow-step:not(:last-child):after{content:'';position:absolute;left:15px;top:38px;bottom:0;width:1px;background:var(--color-border-tertiary)}
+.step-icon{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;z-index:1}
+.step-icon.blue{background:#E6F1FB;color:#185FA5}
+.step-icon.green{background:#EAF3DE;color:#3B6D11}
+.step-icon.red{background:#FCEBEB;color:#A32D2D}
+.step-icon.amber{background:#FAEEDA;color:#854F0B}
+.step-title{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.step-desc{font-size:12px;color:var(--color-text-secondary);margin-top:2px;line-height:1.5}
+.code-block{background:#0D1117;border-radius:var(--border-radius-md);padding:12px 14px;font-family:var(--font-mono);font-size:11px;line-height:1.7;overflow:auto;color:#c9d1d9}
+.c-kw{color:#FF7B72}.c-fn{color:#D2A8FF}.c-str{color:#A5D6FF}.c-cm{color:#8B949E}.c-cls{color:#FFA657}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px}
+.stat-num{font-size:20px;font-weight:500;color:var(--color-text-primary)}
+.stat-lbl{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.mono{font-family:var(--font-mono);font-size:12px;color:var(--color-text-secondary);line-height:1.8}
+</style>
+
+<h2 class="sr-only">Check-Subscription Bot — интерактивное демо</h2>
+
+<div class="wrap">
+  <div>
+    <p class="section-label">Демо бота</p>
+    <div class="phone">
+      <div class="phone-bar">
+        <div class="phone-avatar">B</div>
+        <div>
+          <div class="phone-name">SubCheckBot</div>
+          <div class="phone-sub">бот</div>
+        </div>
+      </div>
+      <div class="chat" id="chat"></div>
+      <div class="dots" id="dots"></div>
+    </div>
+    <div style="text-align:center;margin-top:10px">
+      <button class="ctrl-btn" onclick="restartDemo()">&#8635; Перезапустить</button>
+      <button class="ctrl-btn" id="sub-toggle" onclick="toggleSub()">Режим: не подписан</button>
+    </div>
+  </div>
+
+  <div>
+    <p class="section-label">Детали проекта</p>
+    <div class="panel">
+      <div class="badges">
+        <span class="badge python">Python 3.12</span>
+        <span class="badge aiogram">aiogram 3.7</span>
+        <span class="badge aiogram">Docker</span>
+      </div>
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('flow')">Поток</div>
+        <div class="tab" onclick="switchTab('code')">Код</div>
+        <div class="tab" onclick="switchTab('stats')">Структура</div>
+      </div>
+
+      <div class="pane active" id="pane-flow">
+        <div class="flow-step">
+          <div class="step-icon blue">&#9654;</div>
+          <div>
+            <div class="step-title">/start</div>
+            <div class="step-desc">Пользователь запускает бота</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-icon amber">&#8635;</div>
+          <div>
+            <div class="step-title">Middleware проверяет подписку</div>
+            <div class="step-desc">getChatMember &#8594; статус участника</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-icon green">&#10003;</div>
+          <div>
+            <div class="step-title">Подписан &#8594; доступ открыт</div>
+            <div class="step-desc">Кнопка «Получить контент»</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-icon red">&#10007;</div>
+          <div>
+            <div class="step-title">Не подписан &#8594; ссылка на канал</div>
+            <div class="step-desc">Кнопка «Я подписался» — повтор проверки</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pane" id="pane-code">
+        <div class="code-block"><span class="c-cm"># middlewares/subscription.py</span>
+<span class="c-kw">class</span> <span class="c-cls">SubscriptionMiddleware</span>(BaseMiddleware):
+  <span class="c-kw">async def</span> <span class="c-fn">__call__</span>(self, handler, event, data):
+    bot = data[<span class="c-str">"bot"</span>]
+    user_id = event.from_user.id
+    member = <span class="c-kw">await</span> bot.<span class="c-fn">get_chat_member</span>(
+      chat_id=settings.CHANNEL_ID,
+      user_id=user_id,
+    )
+    data[<span class="c-str">"is_subscribed"</span>] = member.status <span class="c-kw">in</span> (
+      <span class="c-str">"member"</span>, <span class="c-str">"administrator"</span>, <span class="c-str">"creator"</span>
+    )
+    <span class="c-kw">return await</span> <span class="c-fn">handler</span>(event, data)</div>
+      </div>
+
+      <div class="pane" id="pane-stats">
+        <div class="mono">
+          &#128193; check_subscription_bot/<br>
+          &nbsp;&nbsp;&#9500;&#9472;&#9472; bot.py<br>
+          &nbsp;&nbsp;&#9500;&#9472;&#9472; config.py<br>
+          &nbsp;&nbsp;&#9500;&#9472;&#9472; handlers/<br>
+          &nbsp;&nbsp;&#9474;&nbsp;&nbsp;&nbsp;&#9500;&#9472;&#9472; start.py<br>
+          &nbsp;&nbsp;&#9474;&nbsp;&nbsp;&nbsp;&#9500;&#9472;&#9472; content.py<br>
+          &nbsp;&nbsp;&#9474;&nbsp;&nbsp;&nbsp;&#9492;&#9472;&#9472; admin.py<br>
+          &nbsp;&nbsp;&#9500;&#9472;&#9472; middlewares/<br>
+          &nbsp;&nbsp;&#9474;&nbsp;&nbsp;&nbsp;&#9492;&#9472;&#9472; subscription.py<br>
+          &nbsp;&nbsp;&#9500;&#9472;&#9472; keyboards/__init__.py<br>
+          &nbsp;&nbsp;&#9500;&#9472;&#9472; utils/subscription.py<br>
+          &nbsp;&nbsp;&#9500;&#9472;&#9472; Dockerfile<br>
+          &nbsp;&nbsp;&#9492;&#9472;&#9472; README.md
+        </div>
+        <div class="stat-grid">
+          <div class="stat"><div class="stat-num">7</div><div class="stat-lbl">файлов кода</div></div>
+          <div class="stat"><div class="stat-num">3</div><div class="stat-lbl">хендлера</div></div>
+          <div class="stat"><div class="stat-num">1</div><div class="stat-lbl">middleware</div></div>
+          <div class="stat"><div class="stat-num">0</div><div class="stat-lbl">зависимостей БД</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var isSubscribed = false;
+
+var scenarios = {
+  notSub: [
+    {type:'bot', text:'\u041f\u0440\u0438\u0432\u0435\u0442, <b>\u0410\u043b\u0435\u043a\u0441\u0435\u0439</b>!\n\n\ud83d\udd12 \u0414\u043b\u044f \u0434\u043e\u0441\u0442\u0443\u043f\u0430 \u043d\u0435\u043e\u0431\u0445\u043e\u0434\u0438\u043c\u043e \u043f\u043e\u0434\u043f\u0438\u0441\u0430\u0442\u044c\u0441\u044f \u043d\u0430 \u043a\u0430\u043d\u0430\u043b.', btns:[{l:'\ud83d\udce2 \u041f\u043e\u0434\u043f\u0438\u0441\u0430\u0442\u044c\u0441\u044f \u043d\u0430 \u043a\u0430\u043d\u0430\u043b',c:'link'},{l:'\u2705 \u042f \u043f\u043e\u0434\u043f\u0438\u0441\u0430\u043b\u0441\u044f \u2014 \u043f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c',c:''}]},
+    {type:'user', text:'\u2705 \u042f \u043f\u043e\u0434\u043f\u0438\u0441\u0430\u043b\u0441\u044f \u2014 \u043f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c'},
+    {type:'bot', text:'\u274c <b>\u041f\u043e\u0434\u043f\u0438\u0441\u043a\u0430 \u043d\u0435 \u043e\u0431\u043d\u0430\u0440\u0443\u0436\u0435\u043d\u0430.</b>\n\n\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430, \u043f\u043e\u0434\u043f\u0438\u0448\u0438\u0442\u0435\u0441\u044c \u0438 \u043d\u0430\u0436\u043c\u0438\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437.', btns:[{l:'\ud83d\udce2 \u041f\u043e\u0434\u043f\u0438\u0441\u0430\u0442\u044c\u0441\u044f \u043d\u0430 \u043a\u0430\u043d\u0430\u043b',c:'link'},{l:'\u2705 \u042f \u043f\u043e\u0434\u043f\u0438\u0441\u0430\u043b\u0441\u044f \u2014 \u043f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c',c:''}]}
+  ],
+  sub: [
+    {type:'bot', text:'\ud83d\udc4b \u041f\u0440\u0438\u0432\u0435\u0442, <b>\u0410\u043b\u0435\u043a\u0441\u0435\u0439</b>!\n\n\u2705 \u0412\u044b \u043f\u043e\u0434\u043f\u0438\u0441\u0430\u043d\u044b \u2014 \u0432\u0430\u043c \u043e\u0442\u043a\u0440\u044b\u0442 \u0434\u043e\u0441\u0442\u0443\u043f \u043a \u043a\u043e\u043d\u0442\u0435\u043d\u0442\u0443.', btns:[{l:'\ud83d\udcd6 \u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u043a\u043e\u043d\u0442\u0435\u043d\u0442',c:'success'},{l:'\ud83d\udd04 \u041e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u0441\u0442\u0430\u0442\u0443\u0441',c:''}]},
+    {type:'user', text:'\ud83d\udcd6 \u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u043a\u043e\u043d\u0442\u0435\u043d\u0442'},
+    {type:'bot', text:'\ud83c\udf89 <b>\u0414\u043e\u0431\u0440\u043e \u043f\u043e\u0436\u0430\u043b\u043e\u0432\u0430\u0442\u044c \u0432 \u0437\u0430\u043a\u0440\u044b\u0442\u044b\u0439 \u043a\u043b\u0443\u0431!</b>\n\n\u0417\u0434\u0435\u0441\u044c \u0432\u0430\u0448 \u044d\u043a\u0441\u043a\u043b\u044e\u0437\u0438\u0432\u043d\u044b\u0439 \u043a\u043e\u043d\u0442\u0435\u043d\u0442.', btns:[{l:'\u00ab \u041d\u0430\u0437\u0430\u0434',c:''}]}
+  ]
+};
+
+function renderBubble(msg, delay) {
+  return new Promise(function(res) {
+    setTimeout(function() {
+      var chat = document.getElementById('chat');
+      var d = document.createElement('div');
+      d.className = 'bubble ' + (msg.type === 'bot' ? 'bot-bubble' : 'user-bubble');
+      d.innerHTML = msg.text.replace(/\n/g,'<br>');
+      if (msg.type === 'bot' && msg.btns) {
+        var kb = document.createElement('div');
+        kb.className = 'inline-kb';
+        msg.btns.forEach(function(b) {
+          var btn = document.createElement('div');
+          btn.className = 'kb-btn ' + (b.c || '');
+          btn.textContent = b.l;
+          kb.appendChild(btn);
+        });
+        d.appendChild(kb);
+      }
+      chat.appendChild(d);
+      chat.scrollTop = chat.scrollHeight;
+      res();
+    }, delay);
+  });
+}
+
+async function runDemo() {
+  var chat = document.getElementById('chat');
+  chat.innerHTML = '';
+  var seq = isSubscribed ? scenarios.sub : scenarios.notSub;
+  for (var i = 0; i < seq.length; i++) {
+    await renderBubble(seq[i], i === 0 ? 300 : 900);
+  }
+  var dots = document.getElementById('dots');
+  dots.innerHTML = '';
+  for (var j = 0; j < seq.length; j++) {
+    var dot = document.createElement('span');
+    dot.className = 'step-dot' + (j === seq.length - 1 ? ' active' : '');
+    dots.appendChild(dot);
+  }
+}
+
+function restartDemo() { runDemo(); }
+
+function toggleSub() {
+  isSubscribed = !isSubscribed;
+  document.getElementById('sub-toggle').textContent = '\u0420\u0435\u0436\u0438\u043c: ' + (isSubscribed ? '\u043f\u043e\u0434\u043f\u0438\u0441\u0430\u043d' : '\u043d\u0435 \u043f\u043e\u0434\u043f\u0438\u0441\u0430\u043d');
+  runDemo();
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach(function(t, i) {
+    t.classList.toggle('active', ['flow','code','stats'][i] === id);
+  });
+  document.querySelectorAll('.pane').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('pane-' + id).classList.add('active');
+}
+
+runDemo();
+</script>
